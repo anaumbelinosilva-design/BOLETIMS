@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <!-- Garante que o site fique bom no celular -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Boletim Digital</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -15,60 +14,114 @@
     <p class="subtitulo">9º Ano — Estudante Exemplo</p>
   </header>
 
+  <!-- CONTEÚDO PRINCIPAL -->
   <main class="conteudo">
 
-    <!-- CARDS DE RESUMO -->
-    <section class="cards">
-      <div class="card">
-        <span class="card-titulo">Média geral</span>
-        <span class="card-valor" id="card-media-geral">—</span>
-      </div>
-
-      <div class="card">
-        <span class="card-titulo">Total de faltas</span>
-        <span class="card-valor" id="card-total-faltas">—</span>
-      </div>
-
-      <div class="card">
-        <span class="card-titulo">Bom desempenho</span>
-        <span class="card-valor" id="card-bom-desempenho">—</span>
-      </div>
-
-      <div class="card">
-        <span class="card-titulo">Precisam de atenção</span>
-        <span class="card-valor" id="card-atencao">—</span>
-      </div>
-
-      <div class="card">
-        <span class="card-titulo">Frequência</span>
-        <span class="card-valor" id="card-frequencia">—</span>
-        <span class="card-extra" id="card-frequencia-texto"></span>
+    <!-- ÁREA DE ACESSO / LOGIN POR PIN -->
+    <section id="area-login" class="login-area">
+      <div class="login-card">
+        <h2>Acesso ao Boletim</h2>
+        <div class="info-estudante">
+          <p><strong>Série:</strong> 9º Ano</p>
+          <p><strong>Turma:</strong> 9C</p>
+          <p><strong>Número de chamada:</strong> 2</p>
+        </div>
+        <form id="form-login" onsubmit="return false;">
+          <label for="campo-pin">Digite seu PIN:</label>
+          <input type="password" id="campo-pin" maxlength="10" placeholder="Digite o PIN" required autocomplete="off">
+          <button type="button" id="btn-entrar" onclick="fazerLogin()">Entrar</button>
+        </form>
+        <p id="mensagem-login" class="mensagem-status"></p>
       </div>
     </section>
 
-    <!-- TABELA DE DISCIPLINAS -->
-    <section class="tabela-area">
-      <h2>Notas por disciplina</h2>
+    <!-- PAINEL DO BOLETIM (OCULTO ANTES DO LOGIN) -->
+    <div id="painel-boletim" style="display: none;">
 
-      <!-- O wrapper permite rolagem horizontal no celular -->
-      <div class="tabela-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>Disciplina</th>
-              <th>1º Tri</th>
-              <th>2º Tri</th>
-              <th>3º Tri</th>
-              <th>Média</th>
-              <th>Faltas</th>
-              <th>Situação</th>
-            </tr>
-          </thead>
-          <!-- As linhas serão criadas pelo JavaScript -->
-          <tbody id="corpo-tabela"></tbody>
-        </table>
+      <!-- BARRA DE AÇÕES -->
+      <div class="barra-acoes">
+        <button type="button" id="btn-alterar-dados" onclick="abrirEdicao()">Alterar dados</button>
       </div>
-    </section>
+
+      <!-- CARDS DE RESUMO -->
+      <section class="cards">
+        <div class="card">
+          <span class="card-titulo">Média geral</span>
+          <span id="card-media-geral" class="card-valor">—</span>
+        </div>
+        <div class="card">
+          <span class="card-titulo">Total de faltas</span>
+          <span id="card-total-faltas" class="card-valor">—</span>
+        </div>
+        <div class="card">
+          <span class="card-titulo">Bom desempenho</span>
+          <span id="card-bom-desempenho" class="card-valor">—</span>
+        </div>
+        <div class="card">
+          <span class="card-titulo">Precisam de atenção</span>
+          <span id="card-atencao" class="card-valor">—</span>
+        </div>
+        <div class="card">
+          <span class="card-titulo">Frequência</span>
+          <span id="card-frequencia" class="card-valor">—</span>
+          <span id="card-frequencia-texto" class="card-extra"></span>
+        </div>
+      </section>
+
+      <!-- TABELA DE NOTAS -->
+      <section class="tabela-area">
+        <h2>Notas por disciplina</h2>
+        <div class="tabela-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Disciplina</th>
+                <th>1º Tri</th>
+                <th>2º Tri</th>
+                <th>3º Tri</th>
+                <th>Média</th>
+                <th>Faltas</th>
+                <th>Situação</th>
+              </tr>
+            </thead>
+            <tbody id="corpo-tabela">
+              <!-- Preenchido via JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- MODAL / ÁREA DE EDIÇÃO -->
+      <section id="area-edicao" class="modal-edicao" style="display: none;">
+        <div class="modal-conteudo">
+          <h2>Editar Notas e Faltas</h2>
+          <p id="mensagem-salvar" class="mensagem-status"></p>
+          <div class="tabela-wrapper">
+            <table class="tabela-edicao">
+              <thead>
+                <tr>
+                  <th>Disciplina</th>
+                  <th>1º Tri (0-10)</th>
+                  <th>2º Tri (0-10)</th>
+                  <th>3º Tri (0-10)</th>
+                  <th>Faltas 1º Tri</th>
+                  <th>Faltas 2º Tri</th>
+                  <th>Faltas 3º Tri</th>
+                </tr>
+              </thead>
+              <tbody id="corpo-tabela-edicao">
+                <!-- Preenchido via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+          <div class="modal-botoes">
+            <button type="button" id="btn-salvar" onclick="salvarAlteracoes()">Salvar alterações</button>
+            <button type="button" id="btn-cancelar" onclick="fecharEdicao()">Cancelar</button>
+          </div>
+        </div>
+      </section>
+
+    </div>
 
   </main>
 
