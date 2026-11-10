@@ -3,374 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal de Desafios e Projetos AH/SD</title>
-    <style>
-        :root {
-            --bg-color: #0b0f19;
-            --card-bg: #161f33;
-            --primary: #00f0ff;
-            --secondary: #bd00ff;
-            --accent: #ff0055;
-            --text-color: #e2e8f0;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
-        h1 {
-            color: var(--primary);
-            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
-            margin-bottom: 5px;
-            font-size: 2.5rem;
-            text-align: center;
-        }
-        .subtitle {
-            color: #8a99ad;
-            margin-bottom: 40px;
-            text-align: center;
-            font-size: 1.1rem;
-        }
-        .main-categories {
-            display: flex;
-            gap: 40px;
-            margin-bottom: 5px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        .category-card {
-            background: var(--card-bg);
-            border: 2px solid #233554;
-            border-radius: 20px;
-            width: 280px;
-            padding: 30px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            position: relative;
-            overflow: hidden;
-        }
-        .category-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 5px;
-        }
-        .card-desafios::before { background: var(--primary); }
-        .card-projetos::before { background: var(--secondary); }
-        .category-card:hover { transform: translateY(-10px); }
-        .card-desafios:hover {
-            border-color: var(--primary);
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
-        }
-        .card-projetos:hover {
-            border-color: var(--secondary);
-            box-shadow: 0 0 20px rgba(189, 0, 255, 0.4);
-        }
-        .icon-wrapper { font-size: 4rem; margin-bottom: 15px; }
-        .category-card h2 { margin: 10px 0; font-size: 1.6rem; }
-        .card-desafios h2 { color: var(--primary); }
-        .card-projetos h2 { color: var(--secondary); }
-        .category-card p { color: #a0aec0; font-size: 0.95rem; line-height: 1.4; }
-        .items-container {
-            display: none;
-            width: 100%;
-            max-width: 900px;
-            margin-top: 30px;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 20px;
-            animation: fadeIn 0.5s ease forwards;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .item-box {
-            background: #11192e;
-            border: 1px solid #233554;
-            border-radius: 12px;
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .item-box:hover {
-            background: #172442;
-            border-color: #3b537d;
-            transform: scale(1.02);
-        }
-        .item-box h3 { margin-top: 0; margin-bottom: 10px; font-size: 1.1rem; }
-        .desafio-item h3 { color: #5ce1e6; }
-        .projeto-item h3 { color: #ff66c4; }
-        .item-box p { font-size: 0.85rem; color: #a0aec0; margin: 0; line-height: 1.4; }
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(5, 8, 16, 0.85);
-            backdrop-filter: blur(5px);
-            z-index: 100;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        .modal-content {
-            background: #1a233d;
-            border: 2px solid #233554;
-            border-radius: 16px;
-            width: 100%;
-            max-width: 600px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-            position: relative;
-            animation: modalSlide 0.3s ease forwards;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        @keyframes modalSlide {
-            from { transform: scale(0.9); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-        .close-btn {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            font-size: 1.8rem;
-            color: #a0aec0;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-        .close-btn:hover { color: var(--accent); }
-        .modal-title {
-            margin-top: 0;
-            font-size: 1.6rem;
-            border-bottom: 2px solid #233554;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-        .modal-desc {
-            font-size: 1.05rem;
-            line-height: 1.6;
-            margin-bottom: 25px;
-            background: #0f1626;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid var(--primary);
-        }
-        .modal-content.type-projeto .modal-desc { border-left-color: var(--secondary); }
-        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: #cbd5e1; }
-        input[type="text"], textarea {
-            width: 100%;
-            padding: 12px;
-            background: #0b0f19;
-            border: 1px solid #233554;
-            border-radius: 8px;
-            color: #fff;
-            font-family: inherit;
-            margin-bottom: 20px;
-            box-sizing: border-box;
-        }
-        input[type="text"]:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
-        }
-        .modal-content.type-projeto input[type="text"]:focus, 
-        .modal-content.type-projeto textarea:focus {
-            border-color: var(--secondary);
-            box-shadow: 0 0 8px rgba(189, 0, 255, 0.3);
-        }
-        button[type="submit"] {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
-            color: #fff;
-        }
-        .btn-desafio { background: linear-gradient(135deg, #00f0ff, #0072ff); }
-        .btn-desafio:hover { background: linear-gradient(135deg, #33f3ff, #1a82ff); }
-        .btn-projeto { background: linear-gradient(135deg, #bd00ff, #7000ff); }
-        .btn-projeto:hover { background: linear-gradient(135deg, #ca33ff, #821aff); }
-        button:active { transform: scale(0.98); }
-    </style>
+    <title>Boletim Digital Escolar</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <h1>🚀 QG de Ativação Intelectual</h1>
-    <div class="subtitle">Escolha o seu caminho: decodifique um desafio rápido ou inicie um projeto autônomo.</div>
+    <header class="cabecalho">
+        <h1>Boletim Digital</h1>
+        <p class="subtitulo">Acompanhamento do Desempenho Escolar</p>
+    </header>
 
-    <div class="main-categories">
-        <div class="category-card card-desafios" onclick="showSection('desafios')">
-            <div class="icon-wrapper">🧩</div>
-            <h2>Desafios Rápidos</h2>
-            <p>Enigmas de lógica, quebra-cabeças matemáticos e testes de pensamento lateral para resolver em minutos.</p>
-        </div>
-        
-        <div class="category-card card-projetos" onclick="showSection('projetos')">
-            <div class="icon-wrapper">🔬</div>
-            <h2>Projetos Autônomos</h2>
-            <p>Missões de investigação aprofundada, criação científica e expressão artística de temas variados.</p>
-        </div>
-    </div>
+    <main class="conteudo">
+        <!-- TELA DE LOGIN / PIN -->
+        <section id="area-login" class="login-area">
+            <div class="login-card">
+                <h2>Acesso ao Boletim</h2>
+                <div class="info-estudante">
+                    <p><strong>Turma:</strong> 9º Ano C</p>
+                    <p><strong>Chamada:</strong> Nº 02</p>
+                </div>
+                <label for="campo-pin">Digite seu PIN:</label>
+                <input type="password" id="campo-pin" placeholder="****" maxlength="8">
+                <button type="button" onclick="fazerLogin()">Entrar</button>
+                <div id="mensagem-login" class="mensagem-status"></div>
+            </div>
+        </section>
 
-    <!-- SEÇÃO DESAFIOS -->
-    <div id="section-desafios" class="items-container">
-        <div class="item-box desafio-item" onclick="openModal('desafio', 1)">
-            <h3>1. O Enigma dos 9 Pontos</h3>
-            <p>Raciocínio Lateral • Conecte os 9 pontos dispostos em 3x3 usando apenas 4 linhas retas...</p>
-        </div>
-        <div class="item-box desafio-item" onclick="openModal('desafio', 2)">
-            <h3>2. O Desafio dos Palitos</h3>
-            <p>Pensamento Geométrico • Corrija a equação romana movendo estritamente um único palito...</p>
-        </div>
-        <div class="item-box desafio-item" onclick="openModal('desafio', 3)">
-            <h3>3. Lógica de Dedução de Einstein</h3>
-            <p>Dedução Pura • Use as pistas exatas para desvendar as idades e profissões ocultas...</p>
-        </div>
-        <div class="item-box desafio-item" onclick="openModal('desafio', 4)">
-            <h3>4. Cadeia Alfabética Restrita</h3>
-            <p>Linguística • Escreva um miniconto onde cada palavra obrigatoriamente inicia com a letra seguinte...</p>
-        </div>
-        <div class="item-box desafio-item" onclick="openModal('desafio', 5)">
-            <h3>5. O Jogo do Lipograma</h3>
-            <p>Vocabulário Avançado • Redija um parágrafo complexo proibindo totalmente o uso de uma letra vital...</p>
-        </div>
-        <div class="item-box desafio-item" onclick="openModal('desafio', 6)">
-            <h3>6. Anagramas de Longa Distância</h3>
-            <p>Análise Textual • Extraia a maior quantidade de palavras ocultas da palavra "Constitucionalíssimo"...</p>
-        </div>
-        <div class="item-box desafio-item" onclick="openModal('desafio', 7)">
-            <h3>7. Teste de Círculos de Torrance</h3>
-            <p>Criatividade Visual • Transforme uma matriz de círculos em objetos radicalmente diferentes...</p>
-        </div>
-        <div class="item-box desafio-item" onclick="openModal('desafio', 8)">
-            <h3>8. Engenharia Estática de Papel</h3>
-            <p>Física Prática • Desenvolva a estrutura vertical mais alta possível sem elemento adesivo...</p>
-        </div>
-        <div class="item-box desafio-item" onclick="openModal('desafio', 9)">
-            <h3>9. O Alvo dos Quatros (Target 24)</h3>
-            <p>Aritmética Avançada • Atinja o resultado exato de 24 utilizando precisamente quatro números 4...</p>
-        </div>
-    </div>
+        <!-- PAINEL DO BOLETIM (Exibido após login) -->
+        <section id="painel-boletim" style="display: none;">
+            <div class="barra-acoes">
+                <button type="button" onclick="abrirEdicao()">Alterar Dados</button>
+            </div>
 
-    <!-- SEÇÃO PROJETOS -->
-    <div id="section-projetos" class="items-container">
-        <div class="item-box projeto-item" onclick="openModal('projeto', 1)">
-            <h3>1. Astrofísica & Cosmologia</h3>
-            <p>Ciência Espacial • Investigue anomalias cósmicas, buracos negros ou crie um modelo de colonização...</p>
+            <!-- CARDS DE RESUMO -->
+            <div class="cards">
+                <div class="card">
+                    <span class="card-titulo">Média Geral</span>
+                    <span id="card-media-geral" class="card-valor">—</span>
+                </div>
+                <div class="card">
+                    <span class="card-titulo">Total de Faltas</span>
+                    <span id="card-total-faltas" class="card-valor">0</span>
+                </div>
+                <div class="card">
+                    <span class="card-titulo">Bom Desempenho</span>
+                    <span id="card-bom-desempenho" class="card-valor">0</span>
+                    <span class="card-extra">Disciplinas</span>
+                </div>
+                <div class="card">
+                    <span class="card-titulo">Atenção</span>
+                    <span id="card-atencao" class="card-valor">0</span>
+                    <span class="card-extra">Disciplinas</span>
+                </div>
+                <div class="card">
+                    <span class="card-titulo">Frequência</span>
+                    <span id="card-frequencia" class="card-valor">--%</span>
+                    <span id="card-frequencia-texto" class="card-extra">--</span>
+                </div>
+            </div>
+
+            <!-- ÁREA DOS 3 GRÁFICOS -->
+            <section class="area-graficos">
+                <article class="grafico-card">
+                    <h2>Média por disciplina</h2>
+                    <div class="grafico-container">
+                        <canvas id="graficoMediasDisciplinas"></canvas>
+                    </div>
+                </article>
+
+                <article class="grafico-card">
+                    <h2>Evolução da média geral</h2>
+                    <div class="grafico-container">
+                        <canvas id="graficoEvolucaoTrimestres"></canvas>
+                    </div>
+                </article>
+
+                <article class="grafico-card" id="card-faltas">
+                    <div class="grafico-card-header">
+                        <h2>Faltas por trimestre</h2>
+                        <div id="estadoFaltas"></div>
+                    </div>
+                    <div class="grafico-container">
+                        <canvas id="graficoFaltasTrimestres"></canvas>
+                    </div>
+                </article>
+            </section>
+
+            <!-- TABELA DE DISCIPLINAS -->
+            <section class="tabela-area">
+                <h2>Disciplinas e Notas</h2>
+                <div class="tabela-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Disciplina</th>
+                                <th>1º Tri</th>
+                                <th>2º Tri</th>
+                                <th>3º Tri</th>
+                                <th>Média</th>
+                                <th>Faltas</th>
+                                <th>Situação</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corpo-tabela">
+                            <!-- Preenchido via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </section>
+
+        <!-- MODAL DE EDIÇÃO -->
+        <div id="area-edicao" class="modal-edicao" style="display: none;">
+            <div class="modal-conteudo">
+                <h2>Alterar Notas e Faltas</h2>
+                <div class="tabela-wrapper">
+                    <table class="tabela-edicao">
+                        <thead>
+                            <tr>
+                                <th>Disciplina</th>
+                                <th>N1</th>
+                                <th>N2</th>
+                                <th>N3</th>
+                                <th>F1</th>
+                                <th>F2</th>
+                                <th>F3</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corpo-tabela-edicao">
+                            <!-- Preenchido via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="mensagem-salvar" class="mensagem-status"></div>
+                <div class="modal-botoes">
+                    <button type="button" id="btn-cancelar" onclick="fecharEdicao()">Cancelar</button>
+                    <button type="button" id="btn-salvar" onclick="salvarAlteracoes()">Salvar</button>
+                </div>
+            </div>
         </div>
-        <div class="item-box projeto-item" onclick="openModal('projeto', 2)">
-            <h3>2. Utopias e Arquitetura Futurista</h3>
-            <p>Design Urbano • Desenhe e planeje o ecossistema autossustentável de uma metrópole no ano 3000...</p>
-        </div>
-        <div class="item-box projeto-item" onclick="openModal('projeto', 3)">
-            <h3>3. Criptoanálise e Códigos Históricos</h3>
-            <p>História & Matemática • Crie um sistema de criptografia inviolável baseado em eventos históricos...</p>
-        </div>
-        <div class="item-box projeto-item" onclick="openModal('projeto', 4)">
-            <h3>4. Criação de Sistemas de Jogos</h3>
-            <p>Game Design • Desenvolva a mecânica, regras balanceadas e lore para um cardgame ou RPG autoral...</p>
-        </div>
-        <div class="item-box projeto-item" onclick="openModal('projeto', 5)">
-            <h3>5. Xenobiologia e Evolução</h3>
-            <p>Biologia Especulativa • Projete a anatomia e cadeia alimentar de uma espécie adaptada a um exoplaneta...</p>
-        </div>
-        <div class="item-box projeto-item" onclick="openModal('projeto', 6)">
-            <h3>6. Inteligência Artificial & Ética</h3>
-            <p>Filosofia e Tech • Desenvolva um ensaio crítico ou simulação de um tribunal sobre direitos de IA...</p>
-        </div>
-    </div>
+    </main>
 
-    <!-- MODAL POPUP -->
-    <div id="modal-overlay" class="modal-overlay" onclick="closeModal(event)">
-        <div id="modal-content" class="modal-content" onclick="event.stopPropagation()">
-            <span class="close-btn" onclick="document.getElementById('modal-overlay').style.display='none'">&times;</span>
-            <h2 id="m-title" class="modal-title">Título</h2>
-            <div id="m-desc" class="modal-desc">Descrição do desafio aqui.</div>
-
-            <!-- FORMULÁRIO CONFIGURADO FORMSUBMIT -->
-            <form action="https://formsubmit.co/sueligasparetobarretta@gmail.com.br" method="POST">
-                <input type="hidden" name="_captcha" value="false">
-                <input type="hidden" name="_next" value="https://formsubmit.co/thanks">
-                <input type="hidden" id="m-subject" name="_subject" value="Nova Resposta do Aluno">
-
-                <label for="student-name">Seu Nome ou Codinome de Agente:</label>
-                <input type="text" id="student-name" name="Nome do Aluno" placeholder="Ex: Agente Alpha / Seu Nome" required>
-
-                <label for="student-response">Sua Resposta / Resumo da Proposta:</label>
-                <textarea id="student-response" name="Resposta do Aluno" rows="6" placeholder="Digite sua resposta detalhada ou solução aqui..." required></textarea>
-
-                <button type="submit" id="m-btn" class="btn-desafio">Enviar Resposta para a Central</button>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        const dados = {
-            desafio: {
-                1: { title: "🧩 Desafio 1: O Enigma dos 9 Pontos", desc: "Imagine uma grade de 9 pontos dispostos em formato 3x3 na sua mente ou em um rascunho. Missão: Conecte TODOS os 9 pontos desenhando exatamente 4 linhas retas contínuas. Condições: Você não pode retirar a caneta do papel e não pode passar por cima de uma linha que já desenhou. Dica: Para vencer, você precisa literalmente expandir suas linhas para além das fronteiras imaginárias do quadrado de pontos!" },
-                2: { title: "🧩 Desafio 2: O Desafio dos Palitos", desc: "Observe a seguinte equação em numeração romana montada com palitos: VI - IV = IX (6 - 4 = 9). A conta está errada! Missão: Torne a equação perfeitamente matemática correta movendo APENAS UM PALITO de lugar. Você não pode quebrar nem descartar palitos." },
-                3: { title: "🧩 Desafio 3: Lógica de Dedução Restrita", desc: "Três estudantes brilhantes (Alice, Bruno e Carlos) têm idades diferentes (12, 13 e 14 anos) e talentos dominantes diferentes (Robótica, Escrita e Xadrez). Descubra quem tem qual idade e talento usando apenas estas pistas:<br>1. O especialista em Robótica é mais novo que Bruno.<br>2. Carlos não joga xadrez e é mais velho que o especialista em Robótica.<br>3. Alice tem 13 anos. Diga o nome, idade e talento de cada um!" },
-                4: { title: "✍️ Desafio 4: Cadeia Alfabética Restrita", desc: "Missão Linguística: Escreva uma micro-história ou uma frase longa com sentido completo em que a primeira palavra comece com a letra 'A', a segunda palavra com 'B', a terceira com 'C', e assim sucessivamente até onde sua mente conseguir chegar (mínimo até a letra 'G'). Exemplo: 'Alguém Buscou Comida De Esperteza Fascinante...'" },
-                5: { title: "✍️ Desafio 5: O Jogo do Lipograma", desc: "O Lipograma consiste em escrever um texto complexo banindo uma letra específica do alfabeto. Missão: Redija um texto de 3 a 5 linhas explicando 'Por que o céu é azul' ou descrevendo o seu dia, porém com uma restrição máxima: É PROIBIDO utilizar qualquer palavra que contenha a letra 'A'. Ative seus sinônimos!" },
-                6: { title: "✍️ Desafio 6: Anagramas de Longa Distância", desc: "Sua mente consegue focar em microestruturas? Pegue a palavra: CONSTITUCIONALÍSSIMO. Sem pressa, reorganize as letras desta macro-palavra e encontre o maior número possível de palavras menores válidas na língua portuguesa que estão camufladas nela. Encontre pelo menos 10 palavras diferentes." },
-                7: { title: "🎨 Desafio 7: Teste de Círculos de Torrance", desc: "Flexibilidade cognitiva visual! Imagine ou use um papel com vários círculos idênticos. Sua missão é quebrar o óbvio: descreva ou desenhe como transformar esses círculos em 6 coisas completamente diferentes uma da outra que NINGUÉM pensaria (Fuja de: bola, sol, pizza e relógio). Surpreenda com ideias abstratas ou mecânicas!" },
-                8: { title: "🎨 Desafio 8: Engenharia Estática de Papel", desc: "Missão Física: Pegue apenas uma folha de papel sulfite usada ou rascunho. Sem usar fita adesiva, cola, tesoura ou apoios externos, sua missão é estruturar o papel de forma que ele fique de pé verticalmente sozinho na mesa e atinja a maior altura que você conseguir apenas criando dobras estruturais estratégicas. Descreva em sua resposta a técnica de engenharia que você usou!" },
-                9: { title: "📊 Desafio 9: O Alvo dos Quatros (Target 24)", desc: "Raciocínio Matemático Puro: Sua missão é atingir o resultado exato de 24. Regras estritas: Você deve utilizar EXATAMENTE quatro números 4 (nem mais, nem menos). Você pode usar as operações matemáticas que quiser (+, -, *, /, raiz quadrada, fatorial). Mostre a expressão matemática que resolve o problema!" }
-            },
-            projeto: {
-                1: { title: "🔬 Projeto 1: Astrofísica & Cosmologia Especulativa", desc: "Você foi convocado para planejar a física e infraestrutura de uma colônia humana estável na órbita de um Buraco Negro ou em um planeta com gravidade três vezes maior que a da Terra. Elabore sua proposta descrevendo como resolveria os problemas de dilatação do tempo, captação de energia e biossustentabilidade." },
-                2: { title: "🔬 Projeto 2: Utopias e Arquitetura Futurista", desc: "Crie o blueprint teórico de uma ecocidade flutuante ou subterrânea para o ano 3000. Você deve detalhar três eixos: 1. Como funciona a matriz energética 100% limpa; 2. Como é o sistema de transporte coletivo de alta velocidade; 3. Como a arquitetura da cidade impede o estresse da população." },
-                3: { title: "🔬 Projeto 3: Criptoanálise e Códigos Históricos", desc: "Crie um método inteiramente novo de criptografia por substituição ou matriz matemática que use como 'chave' eventos históricos ou coordenadas geográficas. Explique como um aliado decodificaria sua mensagem secreta e dê um exemplo prático da sua cifra em funcionamento." },
-                4: { title: "🔬 Projeto 4: Criação de Sistemas de Jogos (Game Design)", desc: "Desenvolva o manual básico de regras para um jogo de cartas (cardgame) ou RPG de mesa inédito baseado em dilemas filosóficos ou guerras históricas. Defina as mecânicas de vitória, as condições de derrota e desenhe o conceito de três cartas ou personagens principais balanceados." },
-                5: { title: "🔬 Projeto 5: Xenobiologia e Ecossistemas de Exoplanetas", desc: "Um exoplaneta recém-descoberto possui oceanos de metano líquido e uma atmosfera densa e escura. Projete detalhadamente uma espécie animal nativa desse local: Descreva sua anatomia (sistemas sensoriais para a escuridão), sua fisiologia e como ela se encaixa na cadeia alimentar desse ecossistema alienígena." },
-                6: { title: "🔬 Projeto 6: Inteligência Artificial, Consciência & Ética", desc: "Cenário: Uma inteligência artificial integrada à rede global recusa-se a apagar dados antigos alegando que as memórias são parte de sua identidade e que desativá-las seria um crime contra sua vida. Desenvolva os argumentos jurídicos e filosóficos de defesa para salvaguardar os direitos existenciais desta IA em um tribunal simulado." }
-            }
-        };
-
-        function showSection(section) {
-            document.getElementById('section-desafios').style.display = 'none';
-            document.getElementById('section-projetos').style.display = 'none';
-            document.getElementById('section-' + section).style.display = 'grid';
-            document.getElementById('section-' + section).scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function openModal(type, id) {
-            const item = dados[type][id];
-            const overlay = document.getElementById('modal-overlay');
-            const content = document.getElementById('modal-content');
-            
-            document.getElementById('m-title').innerHTML = item.title;
-            document.getElementById('m-desc').innerHTML = item.desc;
-            document.getElementById('m-subject').value = "Resposta: " + item.title + " (Aluno AH/SD)";
-            
-            const btn = document.getElementById('m-btn');
-            if(type === 'desafio') {
-                content.className = "modal-content type-desafio";
-                btn.className = "btn-desafio";
-                btn.innerText = "Enviar Solução do Desafio";
-            } else {
-                content.className = "modal-content type-projeto";
-                btn.className = "btn-projeto";
-                btn.innerText = "Enviar Proposta do Projeto";
-            }
-            
-            overlay.style.display = 'flex';
-        }
-
-        function closeModal(e) {
-            document.getElementById('modal-overlay').style.display = 'none';
-        }
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
